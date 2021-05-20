@@ -1,10 +1,17 @@
-
-import pyscreenshot
 import tkinter
 from tkinter import messagebox, filedialog
 import sys
 from datetime import datetime
 import time
+
+try:
+    import pyscreenshot
+except:
+    import pip
+
+    pip.main(['install', 'pyscreenshot'])
+    pip.main(['install', 'pillow'])
+
 
 def uniqeImageName():
     now = datetime.now()
@@ -25,7 +32,7 @@ class screenshot:
             top.deiconify()
             messagebox.showinfo("Taken", "Screen Captured")
         except:
-            e = sys.exc_info()[0]+sys.exc_info()[1]
+            e = sys.exc_info()[0] + sys.exc_info()[1]
             messagebox.showinfo("Error", e)
 
     def whrereToSave(self):
