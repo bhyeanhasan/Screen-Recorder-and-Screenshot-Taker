@@ -53,26 +53,33 @@ class screenClass:
         self.pressed = False
         self.videoOutput = self.filename + '/' + uniqeImageName() + ".avi"
         self.output = cv2.VideoWriter(self.videoOutput, self.fourcc, 20.0, self.dimension)
+        scrEnd.pack()
         thread = Thread(target=self.recording)
         thread.start()
+
 
     # Thread ei function tare chlabe noile infinity loop freeze kore dibe
     def recording(self):
         t = time.time()
+        scrRecord.configure(text="Recording ...")
+        Time.pack()
+
         while self.key:
             img = pyautogui.screenshot()
             frame = np.array(img)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self.output.write(frame)
-
-            scrRecord.configure(text= "Recording : "+str(round(time.time()-t))+" s")
-
+            Time.delete(0, 'end')
+            Time.insert(-1,"Recording: "+ str(round(time.time()-t)))
         self.output.release()
 
     # key false hoile loop stop hoye jabe
     def endRecord(self):
+        scrRecord.configure(text="Record Again")
+        scrEnd.pack_forget()
         self.key = False
         self.pressed = True
+        Time.pack_forget()
 
     # For taking screenshot
     def takeScreenShot(self):
@@ -112,13 +119,14 @@ scrEnd = tkinter.Button(text="End Recording", command=ss.endRecord, width=20, he
 loc.configure(relief='groove', background="#131354", foreground="white")
 loc.insert(-1, ss.filename)
 
+
 tkinter.Label(background='#2b2b33').pack()
 tkinter.Label(background='#2b2b33').pack()
 
 scrRecord.pack()
 tkinter.Label(background='#2b2b33').pack()
 
-scrEnd.pack()
+# scrEnd.pack()
 
 tkinter.Label(background='#2b2b33').pack()
 
@@ -132,5 +140,9 @@ dirView.pack()
 tkinter.Label(background='#2b2b33').pack()
 
 loc.pack()
+tkinter.Label(background='#2b2b33').pack()
+
+
+Time = tkinter.Entry(width=15,background='#2b2b33',relief='flat',foreground="orange",font=("Courier", 12))
 
 top.mainloop()
