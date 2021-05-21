@@ -29,6 +29,7 @@ def uniqeImageName():
 class screenClass:
     filename = "C:/Users/Public"
     key = True
+    pressed = True
     w = GetSystemMetrics(0)
     h = GetSystemMetrics(1)
     dimension = (w, h)
@@ -49,6 +50,7 @@ class screenClass:
     # To start record
     def startRecord(self):
         self.key = True
+        self.pressed = False
         self.videoOutput = self.filename + '/' + uniqeImageName() + ".avi"
         self.output = cv2.VideoWriter(self.videoOutput, self.fourcc, 20.0, self.dimension)
         thread = Thread(target=self.recording)
@@ -56,17 +58,21 @@ class screenClass:
 
     # Thread ei function tare chlabe noile infinity loop freeze kore dibe
     def recording(self):
+        t = time.time()
         while self.key:
             img = pyautogui.screenshot()
             frame = np.array(img)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self.output.write(frame)
 
+            scrRecord.configure(text= "Recording : "+str(round(time.time()-t))+" s")
+
         self.output.release()
 
     # key false hoile loop stop hoye jabe
     def endRecord(self):
         self.key = False
+        self.pressed = True
 
     # For taking screenshot
     def takeScreenShot(self):
@@ -91,25 +97,25 @@ top.configure(background="#2b2b33")
 
 ss = screenClass()
 
-scrTake = tkinter.Button(text="Take Screenshot", command=ss.takeScreenShot, width=25, height=2, relief='groove',
-                         background="#131354", foreground="yellow")
-dirView = tkinter.Button(text="Change Location", command=ss.whrereToSave, width=15, relief='groove',background="#131354", foreground="white")
-loc = tkinter.Entry(width=50)
-scrRecord = tkinter.Button(text="Start Recording", command=ss.startRecord, width=30, height=3, relief='groove',padx = 10,pady=10,background="#131354", foreground="#EDA63A")
-scrEnd = tkinter.Button(text="End Recording", command=ss.endRecord, width=25, height=2, relief='groove',background="#131354", foreground="red")
+scrTake = tkinter.Button(text="Take Screenshot", command=ss.takeScreenShot, width=20, height=2, relief='groove',
+                         background="#131354", foreground="yellow", font=("Courier", 12))
+dirView = tkinter.Button(text="Change Location", command=ss.whrereToSave, width=15, relief='groove',
+                         background="#131354", foreground="white")
+loc = tkinter.Entry(width=60)
+scrRecord = tkinter.Button(text="Start Recording", command=ss.startRecord, width=20, height=3, relief='groove',
+                           background="#131354", foreground="#EDA63A"
+                           , font=("Courier", 15)
+                           )
+scrEnd = tkinter.Button(text="End Recording", command=ss.endRecord, width=20, height=2, relief='groove',
+                        background="#131354", foreground="red", font=("Courier", 12))
 
-loc.configure(relief='groove',background="#131354", foreground="white")
+loc.configure(relief='groove', background="#131354", foreground="white")
 loc.insert(-1, ss.filename)
-
-
-
-
 
 tkinter.Label(background='#2b2b33').pack()
 tkinter.Label(background='#2b2b33').pack()
 
 scrRecord.pack()
-
 tkinter.Label(background='#2b2b33').pack()
 
 scrEnd.pack()
@@ -126,6 +132,5 @@ dirView.pack()
 tkinter.Label(background='#2b2b33').pack()
 
 loc.pack()
-
 
 top.mainloop()
