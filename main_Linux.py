@@ -1,5 +1,6 @@
 # Used Library and packages
 import tkinter
+import os
 import cv2
 import numpy as np
 from tkinter import messagebox, filedialog
@@ -28,7 +29,7 @@ def uniqeImageName():
 
 # Main backend Class
 class screenClass:
-    filename = "C:/Users/Public"
+    filename = os.getcwd()
     key = True
     pressed = True
     w = top.winfo_screenwidth()
